@@ -4,15 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic-Tac-Toe</title>
+    <!-- Link to the external CSS file for styling -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Button to toggle dark mode, positioned at the top-right corner -->
     <button id="dark-mode-toggle" class="top-right">🌙</button>
+
+    <!-- Header section containing the logo and the game title -->
     <header>
+        <!-- Logo for the game -->
         <img src="logo.png" alt="Tic-Tac-Toe Logo" class="logo">
+        <!-- Game title -->
         <h1>Tic-Tac-Toe</h1>
     </header>
+
+    <!-- Main game board with 9 cells (3x3 grid) -->
     <div class="game-board">
+        <!-- Each cell is represented as a div with a unique data-index -->
         <div class="cell" data-index="0"></div>
         <div class="cell" data-index="1"></div>
         <div class="cell" data-index="2"></div>
@@ -23,14 +32,24 @@
         <div class="cell" data-index="7"></div>
         <div class="cell" data-index="8"></div>
     </div>
+
+    <!-- Status text to display the current game state (e.g., whose turn it is, win/draw messages) -->
     <p class="status"></p>
+
+    <!-- Buttons for restarting the game and toggling between single-player and two-player modes -->
     <div class="buttons">
+        <!-- Restart button to reset the game -->
         <button id="restart">Restart Game</button>
+        <!-- Button to switch between single-player and two-player modes -->
         <button id="toggle-mode">Switch to 2 Player Mode</button>
     </div>
+
+    <!-- Footer section with a personalized message -->
     <footer>
         <p>Made with ❤️ by Rohan</p>
     </footer>
+
+    <!-- Link to the external JavaScript file for game logic -->
     <script src="script.js"></script>
 </body>
 </html>
