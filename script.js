@@ -160,8 +160,8 @@ function restartGame() {
 // Toggle between Single Player and Two Player modes
 function toggleMode() {
     isSinglePlayer = !isSinglePlayer; // Toggle the mode
-    const modeText = isSinglePlayer ? "Single Player Mode" : "2 Player Mode";
-    toggleModeButton.textContent = `Switch to ${isSinglePlayer ? "2 Player Mode" : "Single Player Mode"}`;
+    const modeText = isSinglePlayer ? "AI bot" : "2 Player Mode";
+    toggleModeButton.textContent = `Switch to ${isSinglePlayer ? "2 Player Mode" : "AI Bot"}`;
     restartGame(); // Restart the game
     statusText.textContent = `Game mode switched to ${modeText}`;
 }
@@ -179,3 +179,89 @@ darkModeToggle.addEventListener('click', toggleDarkMode); // Add click event to 
 
 // Initialize the status text
 statusText.textContent = `Player ${currentPlayer}'s turn`;
+// ...existing code...
+
+// --- Winner Modal Popup Elements ---
+const winnerModal = document.getElementById('winner-modal');
+const winnerMessage = document.getElementById('winner-message');
+const closeModal = document.getElementById('close-modal');
+const modalRestart = document.getElementById('modal-restart');
+
+// Show the winner modal with a message
+function showWinnerModal(message) {
+    winnerMessage.textContent = message;
+    winnerModal.style.display = 'block';
+}
+
+// Hide the winner modal
+function hideWinnerModal() {
+    winnerModal.style.display = 'none';
+}
+
+// --- Update finalizeMove to use the popup ---
+function finalizeMove() {
+    if (checkWin()) {
+        statusText.textContent = `Player O wins!`;
+        isGameActive = false;
+        showWinnerModal(`Player O wins!`);
+    } else if (gameState.every(cell => cell)) {
+        statusText.textContent = "It's a draw!";
+        isGameActive = false;
+        showWinnerModal("It's a draw!");
+    } else {
+        currentPlayer = 'X';
+        statusText.textContent = `Player ${currentPlayer}'s turn`;
+    }
+}
+
+// --- Update handleCellClick for Player X win ---
+function handleCellClick(event) {
+    const cell = event.target; // Get the clicked cell
+    const cellIndex = cell.getAttribute('data-index'); // Get the cell's index
+
+    // Ignore clicks if the cell is already taken, the game is over, or it's the AI's turn
+    if (gameState[cellIndex] || !isGameActive || (isSinglePlayer && currentPlayer === 'O')) {
+        return;
+    }
+
+    // Make the move for the current player
+    makeMove(cellIndex, currentPlayer);
+
+    // Check if the current player has won
+    if (checkWin()) {
+        statusText.textContent = `Player ${currentPlayer} wins!`;
+        isGameActive = false;
+        showWinnerModal(`Player ${currentPlayer} wins!`);
+    } 
+    // Check if the game is a draw
+    else if (gameState.every(cell => cell)) {
+        statusText.textContent = "It's a draw!";
+        isGameActive = false;
+        showWinnerModal("It's a draw!");
+    } 
+    // Switch to the next player
+    else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        statusText.textContent = `Player ${currentPlayer}'s turn`;
+
+        // If in Single Player mode and it's the AI's turn, make the AI move
+        if (isSinglePlayer && currentPlayer === 'O') {
+            setTimeout(aiMove, 500); // Delay AI move for better UX
+        }
+    }
+}
+
+// --- Modal event listeners ---
+closeModal.addEventListener('click', hideWinnerModal);
+modalRestart.addEventListener('click', () => {
+    hideWinnerModal();
+    restartGame();
+});
+// Optional: Hide modal when clicking outside content
+window.addEventListener('click', (event) => {
+    if (event.target === winnerModal) {
+        hideWinnerModal();
+    }
+});
+
+// ...existing code...
